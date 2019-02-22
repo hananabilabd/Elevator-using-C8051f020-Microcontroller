@@ -1,0 +1,479 @@
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 1   
+
+
+C51 COMPILER V8.08, COMPILATION OF MODULE FINAL
+OBJECT MODULE PLACED IN final.OBJ
+COMPILER INVOKED BY: C:\SiLabs\MCU\IDEfiles\C51\BIN\C51.exe final.c DB OE BR
+
+line level    source
+
+   1          
+   2                  #include <C8051F020.h>
+   3          
+   4          
+   5          
+   6                  void init_Clock(void); // System clock initialization
+   7                  void init_Port(void); // General system (ports) initialization 
+   8          
+   9                  sbit output1=P0^4;
+  10                  sbit output2=P0^5;
+  11                  sbit output3=P0^6;
+  12                  sbit output4=P0^7;
+  13          
+  14                  sbit a=P1^0;
+  15                  sbit b=P1^1;
+  16                  sbit c=P1^2;
+  17                  sbit d=P1^3;
+  18                  sbit e=P1^4;
+  19                  sbit f=P1^5;
+  20                  sbit g=P1^6;
+  21                  sbit h=P1^7;
+  22          
+  23          
+  24          
+  25          
+  26          
+  27          
+  28                  void init_Port(void)
+  29                  {
+  30   1      
+  31   1              // cross bar configurations
+  32   1                      XBR0 = 0x00;
+  33   1                      XBR1 = 0x00;
+  34   1                      XBR2 = 0x40; // Enable the crossbar, diable weak pullups
+  35   1      
+  36   1                      P0MDOUT = 0xFF; // configured as open=drain for P0
+  37   1                      P2MDOUT = 0xFF; // configured as open=drain for P1
+  38   1                      P1MDOUT = 0x00; // configured as open=drain for P1
+  39   1      
+  40   1                      
+  41   1      
+  42   1                      P74OUT = 0x08;  // configure P.5 as puch-pull
+  43   1                      P5=0x0F; //0 to 3 are input pins
+  44   1                               
+  45   1              }
+  46          
+  47          
+  48          
+  49          
+  50                  void servo_delay(int times)     // Creating Delay in multilple of 50us using 8051 Timers
+  51                  {
+  52   1                  int m;
+  53   1                  for(m=0;m<times;m++)
+  54   1                  {
+  55   2                      TH0=0xFF;
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 2   
+
+  56   2                      TL0=0xD2;
+  57   2                      TR0=1;
+  58   2                      while(TF0==0);
+  59   2                      TF0=0;
+  60   2                      TR0=0;
+  61   2                  }
+  62   1              }
+  63          
+  64          
+  65                  void init_Clock(void)
+  66                  {        /*
+  67   1                      // external osc must be config. first before the internal , to be ready when we switch to it.. 
+  68   1                      OSCXCN = 0x67; // External Osc Freq Control Bits (Bits
+  69   1                              // 2-0; XFCN2-0) set to 111 because crystal frequency > 6.7 MHz
+  70   1                              //Crystal Oscillator Mode (Bits 6-4; XOSCMD2-0) set to 110
+  71   1                      
+  72   1                      while (!(OSCXCN & 0x80)); // Wait till XTLVLD ( bit no 7 ) pin is set
+  73   1                      OSCICN = 0x08;
+  74   1                      */
+  75   1                              
+  76   1                      //OSCICN = 0x04;  //2Mhz
+  77   1                  OSCICN = 0x07;    //16Mhz
+  78   1              }
+  79          
+  80          
+  81                  void clockwise(){
+  82   1      
+  83   1                      int n;
+  84   1                      //for(n=0;n<2;n=n+1)
+  85   1                      //{
+  86   1                              output1=1;
+  87   1                                      output2=0;
+  88   1                                      output3=0;
+  89   1                                      output4=0;
+  90   1                       
+  91   1                          servo_delay(150);
+  92   1                      
+  93   1                                      output1=0;
+  94   1                                      output2=1;
+  95   1                                      output3=0;
+  96   1                                      output4=0;
+  97   1                 
+  98   1                          servo_delay(150);
+  99   1      
+ 100   1                                      output1=0;
+ 101   1                                      output2=0;
+ 102   1                                      output3=1;
+ 103   1                                      output4=0;
+ 104   1                
+ 105   1                          servo_delay(150);
+ 106   1                                      output1=0;
+ 107   1                                      output2=0;
+ 108   1                                      output3=0;
+ 109   1                                      output4=1;
+ 110   1                   
+ 111   1                          servo_delay(150);
+ 112   1                              
+ 113   1                      //}
+ 114   1                  }
+*** WARNING C280 IN LINE 83 OF FINAL.C: 'n': unreferenced local variable
+ 115          
+ 116                   
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 3   
+
+ 117                  void anticlock(){
+ 118   1                      int n;
+ 119   1                      
+ 120   1                              output1=0;
+ 121   1                              output2=0;
+ 122   1                              output3=0;
+ 123   1                              output4=1;
+ 124   1      
+ 125   1                      servo_delay(150);
+ 126   1                      
+ 127   1                              output1=0;
+ 128   1                              output2=0;
+ 129   1                              output3=1;
+ 130   1                              output4=0;
+ 131   1      
+ 132   1                      servo_delay(150);
+ 133   1                              
+ 134   1                              output1=0;
+ 135   1                              output2=1;
+ 136   1                              output3=0;
+ 137   1                              output4=0;
+ 138   1      
+ 139   1                      servo_delay(150);
+ 140   1                      
+ 141   1                              output1=1;
+ 142   1                              output2=0;
+ 143   1                              output3=0;
+ 144   1                              output4=0;
+ 145   1               
+ 146   1                      servo_delay(150);
+ 147   1                      
+ 148   1                      
+ 149   1      
+ 150   1                  }
+*** WARNING C280 IN LINE 118 OF FINAL.C: 'n': unreferenced local variable
+ 151                  void leds()
+ 152                          {
+ 153   1                              
+ 154   1                      P1= 0x01;
+ 155   1                  }
+ 156          
+ 157                  void main()
+ 158                  {       int j ;
+ 159   1                      int y ;
+ 160   1                      int s ;
+ 161   1                      int f0;
+ 162   1                      int f1;
+ 163   1                      int f2;
+ 164   1                      int f4;
+ 165   1                      f4=0;
+ 166   1                      s=0;
+ 167   1                      WDTCN = 0xDE; // Disable watchdog timer
+ 168   1                      WDTCN = 0xAD;
+ 169   1                      init_Clock();
+ 170   1                      init_Port();
+ 171   1      
+ 172   1                      P2 = 0x3f;
+ 173   1                      
+ 174   1                      
+ 175   1                  TMOD=0x01;                // Selecting Timer 0, Mode 1
+ 176   1                      /*
+ 177   1                      a=0;
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 4   
+
+ 178   1                      b=0;
+ 179   1                      c=0;
+ 180   1                      d=0;
+ 181   1                      e=0;
+ 182   1                      f=0;
+ 183   1                      g=0;
+ 184   1                      h=0;
+ 185   1                      */
+ 186   1                      P1 = 0xff;
+ 187   1                      
+ 188   1                      
+ 189   1                      while(1)
+ 190   1      
+ 191   1                  {   
+ 192   2                      
+ 193   2                              
+ 194   2                      
+ 195   2                              
+ 196   2                              if(P5==0x0E && (s==1 || s==2 ) && (f4==0)) // floor 0
+ 197   2                              {
+ 198   3                                      if(s==1 )
+ 199   3                                      {
+ 200   4                                      
+ 201   4                                              for(j=0;j<230;j++)
+ 202   4                                                      {       
+ 203   5                                                      
+ 204   5                                                              anticlock(); // down
+ 205   5                                                              if(P5==0x0D  )
+ 206   5                                                              {
+ 207   6                                                                      f1= 1;
+ 208   6                                                              }
+ 209   5                                                              if(P5==0x0B )
+ 210   5                                                              {
+ 211   6                                                                      f2= 1;
+ 212   6                                                              }
+ 213   5                                                      
+ 214   5                                                      
+ 215   5                                                      }
+ 216   4                                      }
+ 217   3                                      if(s==2 )
+ 218   3                                      {
+ 219   4                                              for(j=0;j<460;j++)
+ 220   4                                                      {       
+ 221   5                                                      
+ 222   5                                                              anticlock(); // down
+ 223   5                                                              
+ 224   5                                                              if(P5==0x0D  )
+ 225   5                                                              {
+ 226   6                                                                      f1= 1;
+ 227   6                                                              }
+ 228   5                                                              if(P5==0x0B )
+ 229   5                                                              {
+ 230   6                                                                      f2= 1;
+ 231   6                                                              }
+ 232   5                                                      
+ 233   5                                                      }       
+ 234   4                                      }
+ 235   3                                              P2=0x3f;                
+ 236   3                                              s=0;
+ 237   3                                              //-------hro7 anfz el interuppt bta3e 
+ 238   3                                              if (f1 ==1 ) // interpet from 0 floor to 1 floor
+ 239   3                                              {
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 5   
+
+ 240   4                                                      for(j=0;j<230;j++)
+ 241   4                                                      {       
+ 242   5                                                      
+ 243   5                                                              clockwise(); // up
+ 244   5                                                              P2=0x06;                
+ 245   5                                                              s=1;
+ 246   5                                                      
+ 247   5                                                      }
+ 248   4                                                      f1=0;
+ 249   4                                              }
+ 250   3      
+ 251   3                                              if (f2 ==1 ) // // interpet from 0 floor to 2 floor
+ 252   3                                              {
+ 253   4                                                      for(j=0;j<460;j++)
+ 254   4                                                      {       
+ 255   5                                      
+ 256   5                                                              clockwise(); // up
+ 257   5                                                              P2=0x5b;                
+ 258   5                                                              s=2;
+ 259   5                                                      }
+ 260   4                                                      f2=0;
+ 261   4                                              }
+ 262   3                              }
+ 263   2              //--------------------------------------------------------------------------------
+ 264   2                              if(P5==0x0D && (s==0 || s==2 ) && (f4==0)) // a person in floor 1
+ 265   2                              {
+ 266   3                                      if(s==0 )
+ 267   3                                      {
+ 268   4                                      
+ 269   4                                              for(j=0;j<230;j++)
+ 270   4                                                      {       
+ 271   5                                                              
+ 272   5                                                              clockwise(); // up
+ 273   5                                                              //leds();
+ 274   5                                                              P2 = 0x00;
+ 275   5                                                              if(P5==0x0E )
+ 276   5                                                              {
+ 277   6                                                                      f0= 1;
+ 278   6                                                              }
+ 279   5                                                              if(P5==0x0B )
+ 280   5                                                              {
+ 281   6                                                                      f2= 1;
+ 282   6                                                              }
+ 283   5                                                      
+ 284   5                                                      }
+ 285   4                                      }
+ 286   3                                      if(s==2 )
+ 287   3                                      {
+ 288   4                                              for(j=0;j<230;j++)
+ 289   4                                                      {       
+ 290   5                                                      
+ 291   5                                                              anticlock(); // down
+ 292   5                                                              if(P5==0x0E )
+ 293   5                                                              {
+ 294   6                                                                      f0= 1;
+ 295   6                                                              }
+ 296   5                                                              if(P5==0x0B )
+ 297   5                                                              {
+ 298   6                                                                      f2= 1;
+ 299   6                                                              }
+ 300   5                                                      
+ 301   5                                                      }       
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 6   
+
+ 302   4                                      }
+ 303   3                                              P2=0x06;                
+ 304   3                                              s=1;
+ 305   3                                              
+ 306   3                                      //-------hro7 anfz el interuppt bta3e 
+ 307   3                                              if (f0 ==1 ) // interpet from 1 floor to 0 floor
+ 308   3                                              {
+ 309   4                                                      servo_delay(950000000000);
+ 310   4      
+ 311   4                                                      for(j=0;j<230;j++)
+ 312   4                                                      {       
+ 313   5                                                      
+ 314   5                                                              anticlock(); // down
+ 315   5                                                              P2=0x3f;                
+ 316   5                                                              s=0;
+ 317   5                                                      }
+ 318   4                                                      f0=0;
+ 319   4                                              }
+ 320   3      
+ 321   3                                              if (f2 ==1 ) // // interpet from 1 floor to 2 floor
+ 322   3                                              {
+ 323   4                                                      for(j=0;j<230;j++)
+ 324   4                                                      {       
+ 325   5                                      
+ 326   5                                                              clockwise(); // up
+ 327   5                                                              P2=0x5b;                
+ 328   5                                                              s=2;
+ 329   5                                                      }
+ 330   4                                                      f2=0;
+ 331   4                                              }
+ 332   3      
+ 333   3                                              
+ 334   3      
+ 335   3                              }
+ 336   2              //------------------------------------------------------------------------------------
+ 337   2                              if(P5==0x0B && (s==0 || s==1) && (f4==0)) //floor 2
+ 338   2                              {
+ 339   3                                      if(s==0 ) // law kan fl door el zero asln
+ 340   3                                      {
+ 341   4                                      
+ 342   4                                              for(j=0;j<460;j++)
+ 343   4                                                      {       
+ 344   5                                                      
+ 345   5                                                              clockwise(); // up
+ 346   5                                                              if(P5==0x0E )
+ 347   5                                                              {
+ 348   6                                                                      f0= 1;
+ 349   6                                                              }
+ 350   5                                                              if(P5==0x0D)
+ 351   5                                                              {
+ 352   6                                                                      f1= 1;
+ 353   6                                                              }
+ 354   5                                                              
+ 355   5                                                      }
+ 356   4                                      }
+ 357   3                                      if(s==1 )
+ 358   3                                      {
+ 359   4                                              for(j=0;j<230;j++)
+ 360   4                                                      {       
+ 361   5                                                      
+ 362   5                                                              clockwise(); // down
+ 363   5                                                              if(P5==0x0E )
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 7   
+
+ 364   5                                                              {
+ 365   6                                                                      f0= 1;
+ 366   6                                                              }
+ 367   5                                                              if(P5==0x0D)
+ 368   5                                                              {
+ 369   6                                                                      f1= 1;
+ 370   6                                                              }
+ 371   5                                                      
+ 372   5                                                      }       
+ 373   4                                      }
+ 374   3                                              P2=0x5B;                
+ 375   3                                              s=2;
+ 376   3                                              // hroo7 anfz el interuppt
+ 377   3                                              if (f0 ==1 ) // interpet from 2 floor to 0 floor
+ 378   3                                              {
+ 379   4                                                      for(j=0;j<460;j++)
+ 380   4                                                      {       
+ 381   5                                                      
+ 382   5                                                              anticlock(); // down
+ 383   5                                                              P2=0x3f;                
+ 384   5                                                              s=0;
+ 385   5                                                      }
+ 386   4                                                      f0=0;
+ 387   4                                              }
+ 388   3      
+ 389   3                                              if (f1 ==1 ) // // interpet from 2 floor to 1 floor
+ 390   3                                              {
+ 391   4                                                      for(j=0;j<230;j++)
+ 392   4                                                      {       
+ 393   5                                      
+ 394   5                                                              anticlock(); // down
+ 395   5                                                              P2=0x06;                
+ 396   5                                                              s=1;
+ 397   5                                                      }
+ 398   4                                                      f1=0;
+ 399   4                                              }
+ 400   3                              }
+ 401   2              //-------------------------------------------------------------------------
+ 402   2                              if(P5==0x07 )
+ 403   2                              {
+ 404   3                                      
+ 405   3                                      
+ 406   3                                              //clockwise();
+ 407   3                                              //P2=0x4F;
+ 408   3                                              //leds();
+ 409   3                                              f4=1;
+ 410   3                                                      
+ 411   3                                      
+ 412   3                                      
+ 413   3                                      }
+ 414   2      
+ 415   2                                      if(P5!= 0x07 )
+ 416   2                                      {
+ 417   3                                      
+ 418   3                                      
+ 419   3                                              //clockwise();
+ 420   3                                              //P2=0x4F;
+ 421   3                                              //leds();
+ 422   3                                              f4=0;
+ 423   3                                                      
+ 424   3                                      
+ 425   3                                      
+C51 COMPILER V8.08   FINAL                                                                 04/18/2017 16:55:42 PAGE 8   
+
+ 426   3                                      }
+ 427   2                      
+ 428   2                    
+ 429   2                  }
+ 430   1      
+ 431   1                      
+ 432   1      
+ 433   1                 
+ 434   1      
+ 435   1              }
+*** WARNING C280 IN LINE 159 OF FINAL.C: 'y': unreferenced local variable
+ 436          
+ 437          
+ 438          
+ 439          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    836    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      14
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

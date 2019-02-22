@@ -1,0 +1,17 @@
+
+BL51 BANKED LINKER/LOCATER V6.05 - SN: Eval Version
+COPYRIGHT KEIL ELEKTRONIK GmbH 1987 - 2007
+"C:\Users\Hanna Nabil\Downloads\Group_\final.obj"  TO "C:\Users\Hanna Nabil\Downloads\Group_\final" RS(256) PL(68) PW(78) 
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LEDS?FINAL
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 0344H BYTE (40%) *
+******************************************************************************
+
+>> 
+>> 
+>> 
+Program Size: data=21.0 xdata=0 code=851
+LINK/LOCATE RUN COMPLETE.  1 WARNING(S),  0 ERROR(S)
